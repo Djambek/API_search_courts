@@ -10,9 +10,17 @@ class SearchCase():
 		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
 		request = requests.get(link, headers=headers)
 		self.page = bs(request.text, 'html.parser')
+		with open("m.html", "w") as f:
+			f.write(request.text)
+			f.close()
 		self.cases = {'cases':[]}
 	def get_cases(self):
-
+		form = self.page.find("div", class_="searchResultContainer")
+		if form.find("div", class_="paginationContainer") is None:
+			self.cases["pages"] = 1
+		else:		
+			self.cases["pages"] = form.find("div", class_="paginationContainer").find("li", class_="active").find("form", id="paginationForm").text.split()[2]
+			#print(form.find("div", class_="paginationContainer"))
 		table_container = self.page.find("div", class_="wrapper-search-tables")
 		#print(table_container)
 		for table in self.page.find_all("div", class_="wrapper-search-tables"):
@@ -21,9 +29,15 @@ class SearchCase():
 				for tr in tbody.find_all("tr"):
 					tmp = {}
 					td = tr.find_all("td")
+
+					#ссылка на дело
+					tmp['url'] = "https://mos-gorsud.ru"+to_normal(td[0].find("nobr").find("a")['href'])
+
+
 					# номер дела
 					#print()
 					tmp['number'] = to_normal(td[0].find("nobr").find("a").text)
+
 
 					# истец и ответчик || стороны
 					#print(td[1].find("div", class_="row_card"))
@@ -48,8 +62,10 @@ class SearchCase():
 
 
 	def to_json(self):
-		with open('data.json', 'w', encoding='utf-8') as f:
-		    json.dump(self.cases, f, ensure_ascii=False, indent=4)
 		return json.dumps(self.cases, ensure_ascii=False)
+
+	def write_file(self):
+		with open('data.json', 'w', encoding="utf-8") as f:
+			json.dump(self.cases, f, ensure_ascii=False)
 
 
