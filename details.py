@@ -21,12 +21,20 @@ class Details():
 				value = to_normal(div_row.find("div", class_="right").text)
 				if name == "Уникальный идентификатор дела":
 					self.case["id"] = value
+				else:
+					self.case["id"] = ""
 				if name == "Номер заявления" or name == "Номер дела ~ материала":
 					self.case["number"] = value
+				else:
+					self.case["number"] = ""
 				if name == "Номер входящего документа":
 					self.case["number_input_document"] = value
+				else:
+					self.case["number_input_document"] = ""
 				if name == "Дата поступления":
 					self.case["register_date"] = value
+				else:
+					self.case["register_date"] = ""
 				if name == "Стороны":			
 					participants_tag = div_row.find("div", class_="right")
 					type_first = to_normal(participants_tag.find_all("strong")[0].text)
@@ -39,10 +47,16 @@ class Details():
 						self.case['participants'] = [{"type": type_first, "name": name_first}]
 				if name == "Cудья":
 					self.case["judge"] = value
+				else:
+					self.case["judge"] = value
 				if name == "Категория дела":
 					self.case["category"] = value
+				else:
+					self.case["category"] = ""
 				if name == "Текущее состояние":
 					self.case["status"] = value
+				else:
+					self.case["status"] = ""
 				
 				# if name == "Дата поступления дела в апелляционную инстанцию":
 				# 	self.case["date_of_appellate_instance"] = value
@@ -57,9 +71,6 @@ class Details():
 		self.case["history"] = []
 		try:
 			table = self.page.find("div", id="state-history").find("table", class_="custom_table margin-top-0 mainTable").find("tbody")
-			#print(table)
-			#print(self.page.find("div", id="state-history").find("table", class_="custom_table margin-top-0 mainTable").find("tbody"))
-			#.find("table", class_="custom_table margin-top-0 mainTable", id="tabs-1").find("tbody")
 			for tr in table.find_all("tr"):
 				tmp = {}
 				td = tr.find_all("td")
