@@ -10,9 +10,6 @@ class SearchCase():
 		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
 		request = requests.get(link, headers=headers)
 		self.page = bs(request.text, 'html.parser')
-		with open("m.html", "w") as f:
-			f.write(request.text)
-			f.close()
 		self.cases = {'cases':[]}
 	def get_cases(self):
 		form = self.page.find("div", class_="searchResultContainer")
